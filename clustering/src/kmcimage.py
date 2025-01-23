@@ -73,8 +73,8 @@ def save_kmc_image(colors:np.ndarray, pixels:np.ndarray, filename:str) -> None:
     """
     Saves a compressed image to disk using the KMC file format:
      * 4 byte header 'KMC:'
-     * 2 byte unsigned integer width
-     * 2 byte unsigned integer height
+     * 2 byte unsigned integer width (big endian)
+     * 2 byte unsigned integer height (big endian)
      * 16x 3 byte RGB color palette
      * Pixel byte pairs; high nibble is first pixel, low nibble is second
     """
@@ -90,8 +90,8 @@ def load_kmc_image(filename:str) -> Tuple[np.ndarray, np.ndarray]:
     """ 
     Reads a compressed image from disk according to the KMC file format:
      * 4 byte header 'KMC:'
-     * 2 byte unsigned integer width
-     * 2 byte unsigned integer height
+     * 2 byte unsigned integer width (big endian)
+     * 2 byte unsigned integer height (big endian)
      * 16x 3 byte RGB color palette
      * Pixel byte pairs; high nibble is first pixel, low nibble is second
     The output will be two numpy arrays: the first is a palette of RGB colors
