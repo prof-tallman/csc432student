@@ -1,53 +1,14 @@
 import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
 
-# Concordia uses CloudFlare, which rejects GET requests that are lacking a
-# User-Agent string. We need to create a string that mimics a web browser but
-# then to be nice we will add our custom user agent string. And yes, typical
-# user agents really do reference all these various versions of web browsers
-mozilla = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-applewebkit = 'AppleWebKit/537.36 (KHTML, like Gecko)'
-chrome = 'Chrome/97.0.4692.71 Safari/537.36'
-safari = 'Safari/537.36'
-politeness = '** Class exercise for CSC432 (see Prof Tallman) **'
-custom_user_agent = f"{mozilla} {applewebkit} {chrome} {safari} {politeness}"
-
-# Slightly different format for our URL request
-url = 'https://www.cui.edu/hr/employee-directory'
-headers = {
-    'User-Agent': custom_user_agent
-}
-request = urllib.request.Request(url, headers=headers)
-with urllib.request.urlopen(request) as response:
-    content = response.read().decode('UTF-8')
-
-# Our web pages are nested to an annoying degree, but this is common for many 
-# website designer packages
-soup = BeautifulSoup(content, "html.parser")
-html = soup.html
-body = html.body
-form = body.contents[1]
-main = form.contents[38]
-data = main.contents[3]
-div = data.contents[1]
-div = div.contents[1]
-div = div.contents[0]
-div = div.contents[1]
-div = div.contents[1]
-div = div.contents[1]
-div = div.contents[2]
-div = div.contents[1]
-div = div.contents[1]
-div = div.contents[1]
-tbody = div.contents[3]
-
 def extract_row(tr):
     ''' Extracts a Concordia staff member's name, phone number, and email from the directory '''
     # Raw HTML:
     #   <tr>
     #   <td style="text-align: center;">Redira, Alicia</td>
     #   <td style="text-align: center;">949-214-3842</td>
-    #   <td style="text-align: center;"><a href="/cdn-cgi/l/email-protection#bbdad7d2d8d2da95c9dedfd2c9dafbd8ced295dedfce" target="blank"><span class="__cf_email__" data-cfemail="a9c8c5c0cac0c887dbcccdc0dbc8e9cadcc087cccddc">[email&#160;protected]</span></a></td>
+    #   <td style="text-align: center;"><a href="/cdn-cgi/l/email-protection#bbdad7d2d8d2da95c9dedfd2c9dafbd8ced295dedfce" target="blank">
+    #        <span class="__cf_email__" data-cfemail="a9c8c5c0cac0c887dbcccdc0dbc8e9cadcc087cccddc">[email&#160;protected]</span></a></td>
     #   </tr>
     # tr.contents
     #   0: '\n' (e.g., the end of the <tr>)
@@ -87,10 +48,32 @@ def extract_row(tr):
 
     return name, phone, email
 
-# The first entry is by itself
-name, phone, email = extract_row(tbody.tr)
-print(name, phone, email)
 
-# Now you need to figure out how to get all the other entries
+# Concordia uses CloudFlare, which rejects GET requests that are lacking a
+# User-Agent string. We need to create a string that mimics a web browser but
+# then to be nice we will add our custom user agent string. And yes, typical
+# user agents really do reference all these various versions of web browsers
+mozilla = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+applewebkit = 'AppleWebKit/537.36 (KHTML, like Gecko)'
+chrome = 'Chrome/97.0.4692.71 Safari/537.36'
+safari = 'Safari/537.36'
+politeness = '** Class exercise for CSC432 (see Prof Tallman) **'
+custom_user_agent = f"{mozilla} {applewebkit} {chrome} {safari} {politeness}"
+
+# Slightly different format for our URL request
+url = 'https://www.cui.edu/hr/employee-directory'
+headers = {
+    'User-Agent': custom_user_agent
+}
+request = urllib.request.Request(url, headers=headers)
+with urllib.request.urlopen(request) as response:
+    content = response.read().decode('UTF-8')
+
+# Our web pages are nested to an annoying degree, but this is common for many 
+# website designer packages
+soup = BeautifulSoup(content, "html.parser")
+html = soup.html
+
+# Now you need to figure out how to get all the entries
 
 
