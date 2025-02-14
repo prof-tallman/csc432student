@@ -9,7 +9,7 @@ if __name__ == '__main__':
     print("\nMNIST")
 
     # Load some data from the MNIST database
-    df = pd.read_csv('mnist_train.csv', nrows=100)
+    df = pd.read_csv('mnist.csv', nrows=100)
     y = pd.DataFrame(df.iloc[:,-1])
     X = df.iloc[:,:-1].astype(np.uint8)
 
