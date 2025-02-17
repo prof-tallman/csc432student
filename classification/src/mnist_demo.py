@@ -1,26 +1,32 @@
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.cm as cmap
 import matplotlib.pyplot as plt
+from sklearn.datasets import fetch_openml
 from PIL import Image
 
 if __name__ == '__main__':
 
-    print("\nMNIST")
-
-    # Load some data from the MNIST database
-    df = pd.read_csv('mnist_train.csv', nrows=100)
-    y = pd.DataFrame(df.iloc[:,-1])
-    X = df.iloc[:,:-1].astype(np.uint8)
+    # Load some data from the MNIST database, we only want 100 samples
+    mnist_local_file = 'mnist.csv'
+    if os.path.exists(mnist_local_file) and os.path.isfile(mnist_local_file):
+        print("\nLoading MNIST training data from local file")
+        data = np.loadtxt(mnist_local_file, delimiter=",")
+        X = data[:,1:].astype(np.uint8)
+        y = data[:,0].astype(np.uint8)
+    else:
+        print("\nDownloading and caching MNIST training data from internet")
+        mnist = fetch_openml('mnist_784', parser='auto', 
+                             version=1, as_frame=False)
+        X = mnist.data.astype(np.uint8)[:100]
+        y = mnist.target.astype(np.uint8)[:100]
+        np.savetxt(mnist_local_file, np.column_stack((y, X)), 
+                   delimiter=',', fmt='%d')
 
     # Get a sigle digit from MNIST
-    some_digit = X.iloc[-1,:]
+    some_digit = X[0]
     print(f"Original Size: {some_digit.shape}")
-    print(f"\n{some_digit}\n")
-
-    # Convert from a Pandas DataFrame to a 1-D Numpy Array
-    some_digit = some_digit.to_numpy()
-    print(f"NP Array Size: {some_digit.shape}")
     print(f"\n{some_digit}\n")
 
     # We need a 2-D array to display this image
@@ -34,6 +40,4 @@ if __name__ == '__main__':
     # Convert to Pillow image and save
     pimage = Image.fromarray(some_digit)
     pimage.show()
-    pimage.save('mnist_digit.jpg')
-
-    print("Done with MNIST\n")
+    print("Done with MNIST")
