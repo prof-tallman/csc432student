@@ -15,20 +15,42 @@ import pickle
 RNG = np.random.default_rng()
 
 
-def _run_simulation(n_episodes:int, slippery:bool, 
-                    training_mode:bool, render_mode:bool, filename:str):
+def _run_simulation(n_episodes:int, 
+                    is_slippery:bool, 
+                    training_mode:bool, 
+                    render_mode:bool, 
+                    file_name:str):
     '''
     Simple Q-Learning demonstration using Gymnasium's "Frozen Lake" game. This
     function is the core reinforcement learning algorithm that can be used for
     training and rollout. There should be two wrapper functions `train` and
     `rollout` that provide an easier interface to this function.
+
+    Parameters:
+     * n_episodes:  Number of iterations to train the model. Higher numbers
+                    provide more learning but they take longer.
+     * is_slippery: Adds a random element to the game. The agent has an 80% of
+                    moving in the intended direction but there's still a 20%
+                    chance that it 'slips' and goes a different way.
+     * training_mode: Determines whether the model should train by creating
+                    and saving a new Q-Table or make use of an existing model.
+     * render_mode: Selects whether to show and animate the episodse or run
+                    them all in the background. If `training_mode` is True,
+                    this parameter is usually False (it's **much** faster).
+                    But if `training_mode` is False, the user should decide
+                    whether they want to visually see the results or just use
+                    the text calculations.
+     * file_name:   Saves the trained model under this file name (relative to
+                    the working directory).
+
+    Returns: None
     '''
 
     # Converts render_mode True/False to terms that gymnasium understands
     render_mode = 'human' if render_mode else None
     env = gym.make('FrozenLake-v1', 
                    map_name="8x8", 
-                   is_slippery=slippery, 
+                   is_slippery=is_slippery, 
                    render_mode=render_mode)
 
     # Training mode starts with an empty Q-Table whereas rollout mode uses
@@ -36,7 +58,7 @@ def _run_simulation(n_episodes:int, slippery:bool,
     if training_mode:
         q = np.zeros((env.observation_space.n, env.action_space.n))
     else:
-        with open('frozen_lake8x8.pkl', 'rb') as fin:
+        with open(file_name, 'rb') as fin:
             q = pickle.load(fin)
 
     # Hyperparameters for the main Q-Learning Equation Q(s,a) and also for the 
@@ -113,26 +135,53 @@ def _run_simulation(n_episodes:int, slippery:bool,
     for i in range(n_episodes):
         last100_rewards[t] = np.sum(rewards_history[max(0, i-100):(i+1)])
     plt.plot(last100_rewards)
-    plt.savefig('frozen_lake8x8.png')
+    plt.savefig(f'{file_name}.png')
 
     # Save the fully trained model.
     if training_mode:
-        with open("frozen_lake8x8.pkl","wb") as fout:
+        with open(file_name,"wb") as fout:
             pickle.dump(q, fout)
 
-def train(n_episodes, is_slippery=True, filename="frozen_lake8x8.pkl"):
-    '''
-    Trains a Q-Learning model in Gymnasium's Frozen Lake environment.
+    return None
 
-    Final model is saved to disk with an image showing the learning rate.
-    '''
-    return _run_simulation(n_episodes, is_slippery, True, False, filename)
 
-def rollout(is_slippery=True, filename="frozen_lake8x8.pkl"):
+def train(n_episodes:int = 10000, 
+          is_slippery:bool = True, 
+          file_name:str = "frozen_lake8x8.pkl"):
     '''
-    Visualizes a fully trained Q-Learning model.
+    Trains a Q-Learning model in Gymnasium's Frozen Lake environment. The
+    final model is saved to disk with an image showing the learning rate.
+
+    Parameters:
+     * n_episodes:  Number of iterations to train the model. Higher numbers
+                    provide more learning but they take longer.
+     * is_slippery: Adds a random element to the game. The agent has an 80% of
+                    moving in the intended direction but there's still a 20%
+                    chance that it 'slips' and goes a different way.
+     * file_name:   Saves the trained model under this file name (relative to
+                    the working directory).
+
+    Returns: None
     '''
-    return _run_simulation(1, is_slippery, False, True, filename)
+    return _run_simulation(n_episodes, is_slippery, True, False, file_name)
+
+def rollout(is_slippery:bool = True, 
+            file_name:str = "frozen_lake8x8.pkl"):
+    '''
+    Visualizes one episode in the environment with a fully trained Q-Learning
+    model.
+
+    Parameters
+     * is_slippery: Adds a random element to the game. The agent has an 80% of
+                    moving in the intended direction but there's still a 20%
+                    chance that it 'slips' and goes a different way.
+     * file_name:   Loads the trained model from a Pickle file with this file
+                    name (relative to the working directory).
+
+    Returns: None
+    '''
+    return _run_simulation(1, is_slippery, False, True, file_name)
+
 
 if __name__ == '__main__':
     train(15000)
