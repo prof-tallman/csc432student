@@ -6,13 +6,18 @@
 # being a series of values Q at some time t (s0,a0) -> (s1,a1) -> ... (st,at).
 # https://www.youtube.com/watch?v=9fAnzZ6xzhA
 
+# Official documentation:
+# https://gymnasium.farama.org/environments/toy_text/frozen_lake/
+
 import gymnasium as gym
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import pickle
 
-# global random number generator
-RNG = np.random.default_rng()
+# global random number generator with seed that guarantees victory
+rngseed = 432
+RNG = np.random.default_rng(seed=rngseed)
 
 
 def _run_simulation(n_episodes:int, 
@@ -43,7 +48,7 @@ def _run_simulation(n_episodes:int,
      * file_name:   Saves the trained model under this file name (relative to
                     the working directory).
 
-    Returns: None
+    Returns: The Q-Table as a numpy array
     '''
 
     # Converts render_mode True/False to terms that gymnasium understands
@@ -52,14 +57,15 @@ def _run_simulation(n_episodes:int,
                    map_name="8x8", 
                    is_slippery=is_slippery, 
                    render_mode=render_mode)
+    env.action_space.seed(rngseed)
 
     # Training mode starts with an empty Q-Table whereas rollout mode uses
     # a pretrained model that was saved to disk
     if training_mode:
-        q = np.zeros((env.observation_space.n, env.action_space.n))
+        q_table = np.zeros((env.observation_space.n, env.action_space.n))
     else:
         with open(file_name, 'rb') as fin:
-            q = pickle.load(fin)
+            q_table = pickle.load(fin)
 
     # Hyperparameters for the main Q-Learning Equation Q(s,a) and also for the 
     # epsilon-greedy policy that starts with 100% exploration and slowly moves
@@ -76,9 +82,9 @@ def _run_simulation(n_episodes:int,
     rewards_history = np.zeros(n_episodes)
     
     for i in range(n_episodes):
-        state, info = env.reset() # States: 0 (TL corner) to 63 (BR corner)
-        terminated = False        # True when fall through ice or solved maze
-        truncated = False         # True when actions > max_episode_steps
+        state, info = env.reset(seed=rngseed)
+        terminated = False
+        truncated = False
 
         while not terminated and not truncated:
 
@@ -88,20 +94,21 @@ def _run_simulation(n_episodes:int,
                 if RNG.random() < epsilon:
                     action = env.action_space.sample()
                 else:
-                    action = np.argmax(q[state,:])
+                    action = np.argmax(q_table[state,:])
 
             # In rollout mode, we always exploit the learning by selecting
             # the action with the highest expected future reward.
             else:
-                action = np.argmax(q[state,:])
+                action = np.argmax(q_table[state,:])
 
             # Perform the action in the environment and receive back the new
             # state information, the reward, and whether or not the episode is
             # complete. If we're in training mode, we update the Q-Table.
             next_state, reward, terminated, truncated, info = env.step(action)
             if training_mode:
-                q[state,action] = q[state,action] + alpha * (
-                    reward + gamma * np.max(q[next_state,:]) - q[state,action])
+                tempdif = gamma * np.max(q_table[next_state,:])
+                learned = alpha * (reward + tempdif - q_table[state,action])
+                q_table[state,action] = q_table[state,action] + learned
             state = next_state
 
         # Update the epsilon-greedy algorithm so that we gradually change from
@@ -131,18 +138,25 @@ def _run_simulation(n_episodes:int,
     # Plot the reward results for the last 100 episodes. Since the reward is
     # either 0 or 1 for any given episode, the sum of the last 100 episodes
     # will roughly correspond to the win rate for the agent.
-    last100_rewards = np.zeros(n_episodes)
-    for i in range(n_episodes):
-        last100_rewards[t] = np.sum(rewards_history[max(0, i-100):(i+1)])
-    plt.plot(last100_rewards)
-    plt.savefig(f'{file_name}.png')
+    if training_mode:
+        last100_rewards = np.zeros(n_episodes)
+        for i in range(n_episodes):
+            last100_rewards[i] = np.sum(rewards_history[max(0, i-100):(i+1)])
+        plt.plot(last100_rewards)
+        plt.savefig(f'{file_name}.png')
+
+    # Save the Q-Table to 
+    if training_mode:
+        actions = ["←", "↓", "→", "↑"]
+        df = pd.DataFrame(q_table, columns=actions)
+        df.round(3).to_csv(f'{file_name}.csv')
 
     # Save the fully trained model.
     if training_mode:
         with open(file_name,"wb") as fout:
-            pickle.dump(q, fout)
+            pickle.dump(q_table, fout)
 
-    return None
+    return q_table
 
 
 def train(n_episodes:int = 10000, 
@@ -161,9 +175,10 @@ def train(n_episodes:int = 10000,
      * file_name:   Saves the trained model under this file name (relative to
                     the working directory).
 
-    Returns: None
+    Returns: The Q-Table as a numpy array
     '''
     return _run_simulation(n_episodes, is_slippery, True, False, file_name)
+
 
 def rollout(is_slippery:bool = True, 
             file_name:str = "frozen_lake8x8.pkl"):
@@ -178,12 +193,38 @@ def rollout(is_slippery:bool = True,
      * file_name:   Loads the trained model from a Pickle file with this file
                     name (relative to the working directory).
 
-    Returns: None
+    Returns: The Q-Table as a numpy array
     '''
     return _run_simulation(1, is_slippery, False, True, file_name)
 
 
+def visualize_policy(q_table:np.ndarray, map_shape:tuple=(8, 8)):
+    """
+    Visualizes the learned policy as arrows in a grid. Each arrow shows the 
+    best action (←, ↓, →, ↑) for the agent in that state.
+
+    Parameters:
+     * q_table:   The learned Q-table (a NumPy array)
+     * map_shape: Shape of the Frozen Lake map (default 8x8)
+    """
+    action_symbols = ['←', '↓', '→', '↑']
+    policy_grid = np.full(map_shape, ' ', dtype=str)
+    for state in range(q_table.shape[0]):
+        row = state // map_shape[1]
+        col = state % map_shape[1]
+        if np.sum(q_table[state]) > 0:
+            best_action = np.argmax(q_table[state])
+            policy_grid[row, col] = action_symbols[best_action]
+        else:
+            policy_grid[row, col] = ' '
+
+    print("\nLearned Policy:")
+    for row in policy_grid:
+        print(' '.join(row))
+
+
 if __name__ == '__main__':
-    train(15000)
+    q_table = train(15000, is_slippery=False)
+    visualize_policy(q_table)
     input("Press <ENTER> to rollout the model")
-    rollout()
+    rollout(is_slippery=False)
