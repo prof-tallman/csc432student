@@ -23,7 +23,6 @@ RNG = np.random.default_rng(seed=rngseed)
 def _run_simulation(n_episodes:int, 
                     is_slippery:bool, 
                     training_mode:bool, 
-                    render_mode:bool, 
                     file_name:str):
     '''
     Simple Q-Learning demonstration using Gymnasium's "Frozen Lake" game. This
@@ -52,7 +51,7 @@ def _run_simulation(n_episodes:int,
     '''
 
     # Converts render_mode True/False to terms that gymnasium understands
-    render_mode = 'human' if render_mode else None
+    render_mode = None if training_mode else 'human'
     env = gym.make('FrozenLake-v1', 
                    map_name="8x8", 
                    is_slippery=is_slippery, 
@@ -71,8 +70,8 @@ def _run_simulation(n_episodes:int,
     # epsilon-greedy policy that starts with 100% exploration and slowly moves
     # to 100% exploitation (i.e., experience) but only if there are enough
     # episodes to reach epsilon==0 at the given decay rate.
-    alpha = 0.9 # learning rate
-    gamma = 0.9 # discount rate
+    alpha = 0.9 # learning rate (very high)
+    gamma = 0.9 # discount rate (mid-range)
     epsilon = 1 # start at 100% exploration
     epsilon_decay_rate = 0.0001
 

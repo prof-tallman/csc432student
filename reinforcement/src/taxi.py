@@ -47,7 +47,6 @@ RNG = np.random.default_rng()
 
 def _run_simulation(n_episodes:int, 
                     training_mode:bool, 
-                    render_mode:bool, 
                     file_name:str):
     '''
     Simple Q-Learning demonstration using Gymnasium's "Taxi" game. This is the
@@ -73,7 +72,7 @@ def _run_simulation(n_episodes:int,
     '''
 
     # Converts render_mode True/False to terms that gymnasium understands
-    render_mode = 'human' if render_mode else None
+    render_mode = None if training_mode else 'human'
     env = gym.make('Taxi-v3', render_mode=render_mode)
 
     # Training mode starts with an empty Q-Table whereas rollout mode uses
@@ -88,8 +87,8 @@ def _run_simulation(n_episodes:int,
     # epsilon-greedy policy that starts with 100% exploration and slowly moves
     # to 100% exploitation (i.e., experience) but only if there are enough
     # episodes to reach epsilon==0 at the given decay rate.
-    alpha = 0.9 # learning rate
-    gamma = 0.9 # discount rate
+    alpha = 0.9 # learning rate (very high)
+    gamma = 0.9 # discount rate (mid-range)
     epsilon = 1 # start at 100% exploration
     epsilon_decay_rate = 0.0001
 
@@ -200,6 +199,64 @@ def _generate_observation_list():
     return observations
 
 
+def train(n_episodes:int = 2000, 
+          file_name:str = "taxi.pkl"):
+    '''
+    Trains a Q-Learning model in Gymnasium's Taxi environment. The final model
+    is saved to disk along with the Q-Table and an image of the learning rate.
+
+    Parameters:
+     * n_episodes:  Number of iterations to train the model. Higher numbers
+                    provide more learning but they take longer.
+     * file_name:   Saves the trained model under this file name (relative to
+                    the working directory).
+
+    Returns: The final Q-Table in a Numpy array
+    '''
+    return _run_simulation(n_episodes, True, file_name)
+
+
+def rollout(file_name:str = "taxi.pkl"):
+    '''
+    Visualizes one episode in the Taxi environment with a fully trained
+    Q-Learning model.
+
+    Parameters
+     * file_name:   Loads the trained model from a Pickle file with this file
+                    name (relative to the working directory).
+
+    Returns: The final Q-Table in a Numpy array
+    '''
+    return _run_simulation(1, False, file_name)
+
+
+if __name__ == '__main__':
+    train(3000)
+    input("Press <ENTER> to rollout the model")
+    rollout()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #interactive_rollout()
+
+"""
 def interactive_rollout(file_name: str = "taxi.pkl"):
     '''
     Allows a human to manually play the Taxi-v3 environment using keyboard input.
@@ -253,41 +310,4 @@ def interactive_rollout(file_name: str = "taxi.pkl"):
 
     env.close()
     print("Game over.")
-
-
-def train(n_episodes:int = 2000, 
-          file_name:str = "taxi.pkl"):
-    '''
-    Trains a Q-Learning model in Gymnasium's Taxi environment. The final model
-    is saved to disk along with the Q-Table and an image of the learning rate.
-
-    Parameters:
-     * n_episodes:  Number of iterations to train the model. Higher numbers
-                    provide more learning but they take longer.
-     * file_name:   Saves the trained model under this file name (relative to
-                    the working directory).
-
-    Returns: The final Q-Table in a Numpy array
-    '''
-    return _run_simulation(n_episodes, True, False, file_name)
-
-
-def rollout(file_name:str = "taxi.pkl"):
-    '''
-    Visualizes one episode in the Taxi environment with a fully trained
-    Q-Learning model.
-
-    Parameters
-     * file_name:   Loads the trained model from a Pickle file with this file
-                    name (relative to the working directory).
-
-    Returns: The final Q-Table in a Numpy array
-    '''
-    return _run_simulation(1, False, True, file_name)
-
-
-if __name__ == '__main__':
-    train(3000)
-    input("Press <ENTER> to rollout the model")
-    rollout()
-    #interactive_rollout()
+"""
