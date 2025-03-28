@@ -79,13 +79,15 @@ def _run_simulation(n_episodes:int,
     # the final square in the bottom-left corner (square #63), then the agent
     # receives a reward of 1. Every other state/action receives a score of 0.
     rewards_history = np.zeros(n_episodes)
-    
+
+    # Iterate through each episode, one a time.
     for i in range(n_episodes):
         state, info = env.reset(seed=rngseed)
         terminated = False
         truncated = False
 
-        while not terminated and not truncated:
+      # Run a single episode until it ends.
+      while not terminated and not truncated:
 
             # In training mode, we use epislon greedy to choose between a 
             # random action and a learned action.
