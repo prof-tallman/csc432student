@@ -92,12 +92,14 @@ def _run_simulation(n_episodes:int,
     epsilon = 1 # start at 100% exploration
     epsilon_decay_rate = 0.0001
 
+    # Iterate through each episode, one a time.
     rewards_history = np.zeros(n_episodes)    
     for i in range(n_episodes):
         state, info = env.reset()
         terminated = False
         truncated = False
 
+        # Run a single episode until it ends.
         rewards = 0
         while not terminated and not truncated:
 
