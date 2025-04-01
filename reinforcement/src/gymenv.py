@@ -1,15 +1,8 @@
-from enum import IntEnum
+
+from os import environ
 import numpy as np
 import pygame
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
-
-# Parts of the game engine won't load without PyGame fully initialized. This
-# is a shortcoming of Prof Tallman's game engine that he intends to fix.
-pygame.init()
-pygame.mixer.init()
-pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('Shooter')            
-
 import gymnasium as gym
 from gymnasium import spaces
 from gymnasium.envs.registration import register
@@ -42,16 +35,24 @@ class ShooterEnv(gym.Env):
         '''
 
         super().__init__()
-        self.game = GameEngine()
         self.render_mode = render_mode
-        self.screen = None
+        pygame.init()
+        pygame.display.init()
+        if self.render_mode != 'human':
+            pygame.display.set_mode((1, 1), pygame.HIDDEN)
+        else:
+            pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+            pygame.display.set_caption('Shooter')
+            pygame.mixer.init()
+        self.screen = pygame.display.get_surface()
+        self.game = GameEngine(self.screen)
 
         # Discrete action space: 7 possible moves
         self.action_space = spaces.Discrete(7)
 
         # Observation: [dx, dy, health, exit_dx, exit_dy, ammo, grenades]
-        low = np.array([-10000, -10000, 0, -10000, -10000, 0, 0], dtype=np.float32)
-        high = np.array([10000, 10000, 100, 10000, 10000, 50, 20], dtype=np.float32)
+        low = np.array([-10000, -1000, 0, -10000, -10000, 0, 0], dtype=np.float32)
+        high = np.array([10000, 1000, 100, 10000, 10000, 50, 20], dtype=np.float32)
         self.observation_space = spaces.Box(low, high, dtype=np.float32)
 
 
@@ -105,13 +106,9 @@ class ShooterEnv(gym.Env):
         # Do nothing if rendering is disabled
         if self.render_mode != "human":
             return
-        
-        # Once Prof Tallman fixes the game engine, the 4-5 lines to initialize
-        # the pygame, the mixer, and the display will go here.
-        if self.screen is None:
-            self.screen = pygame.display.get_surface()
 
-        self.game.draw(self.screen)
+        # Draw the screen        
+        self.game.draw()
         pygame.display.update()
 
 
