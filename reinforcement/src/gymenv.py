@@ -8,7 +8,6 @@ from gymnasium import spaces
 from gymnasium.envs.registration import register
 from engine import GameEngine
 from controller import GameController
-from settings import TILEMAP, ENVIRONMENT, Direction
 
 # Not required unless we want to provide traditional gym.make capabilities
 register(id='Sidescroller-v0',
