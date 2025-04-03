@@ -1,6 +1,7 @@
 
 from gymenv import ShooterEnv
 
+
 # Manually create and initialize the environment
 env = ShooterEnv(render_mode=None)
 obs, info = env.reset()
@@ -24,13 +25,14 @@ while not done and step_count < 500:
     total_reward += reward
     step_count += 1
     action = action_list[action]
+    done = terminated or truncated
 
     print(f"Step {step_count:5}: action={action:<10} "
-          f"reward={reward:>6.2f} "
+          f"reward={reward:>7.2f} "
           f"health={info['player_health']:2} "
           f"position=({info['player_distance'][0]:4}, {info['player_distance'][0]:4}) "
-          f"exit=({info['exit_distance'][0]:4}, {info['exit_distance'][0]:4})"
-          f"done={terminated or truncated}")
+          f"exit=({info['exit_distance'][0]:4}, {info['exit_distance'][0]:4}) "
+          f"done={done}")
 
 print(f"Total reward after {step_count} steps: {total_reward:.2f}")
 env.close()

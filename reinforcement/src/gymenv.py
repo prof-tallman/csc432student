@@ -1,13 +1,16 @@
 
-from os import environ
 import numpy as np
 import pygame
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT
+
+pygame.init()
+pygame.mixer.init()
+
 import gymnasium as gym
-from gymnasium import spaces
+from gymnasium.spaces import Discrete, Box
 from gymnasium.envs.registration import register
 from engine import GameEngine
 from controller import GameController
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 # Not required unless we want to provide traditional gym.make capabilities
 register(id='Sidescroller-v0',
@@ -35,24 +38,23 @@ class ShooterEnv(gym.Env):
 
         super().__init__()
         self.render_mode = render_mode
-        pygame.init()
         pygame.display.init()
-        if self.render_mode != 'human':
-            pygame.display.set_mode((1, 1), pygame.HIDDEN)
-        else:
+        if self.render_mode == 'human':
             pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
             pygame.display.set_caption('Shooter')
-            pygame.mixer.init()
-        self.screen = pygame.display.get_surface()
-        self.game = GameEngine(self.screen)
+            self.screen = pygame.display.get_surface()
+            self.game = GameEngine(self.screen, False)
+        else:
+            pygame.display.set_mode((1, 1), pygame.HIDDEN)
+            self.game = GameEngine(None, False)
 
         # Discrete action space: 7 possible moves
-        self.action_space = spaces.Discrete(7)
+        self.action_space = Discrete(7)
 
         # Observation: [dx, dy, health, exit_dx, exit_dy, ammo, grenades]
         low = np.array([-10000, -1000, 0, -10000, -10000, 0, 0], dtype=np.float32)
         high = np.array([10000, 1000, 100, 10000, 10000, 50, 20], dtype=np.float32)
-        self.observation_space = spaces.Box(low, high, dtype=np.float32)
+        self.observation_space = Box(low, high, dtype=np.float32)
 
 
     def reset(self, seed=None, options=None):
