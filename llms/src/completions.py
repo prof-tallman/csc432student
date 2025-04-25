@@ -1,9 +1,10 @@
 
 # pip install openai
+import os
 import openai
 
-# Prof Tallman's API key for you to use (will be posted to Canvas)
-client = openai.OpenAI(api_key='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')
+openai_api_key = os.environ.get('OPENAI_API_KEY')
+client = openai.OpenAI(api_key=openai_api_key)
 
 # "system"    - used to set the context (optional)
 # "user"      - these are your prompts (at least one user prompt is required)
