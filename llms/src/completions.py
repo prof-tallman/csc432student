@@ -1,10 +1,9 @@
 
 # pip install openai
-import os
 import openai
 
-openai_api_key = os.environ.get('OPENAI_API_KEY')
-client = openai.OpenAI(api_key=openai_api_key)
+# This call automatically grabs environment variable OPENAI_API_KEY if it exists
+client = openai.OpenAI()
 
 # "system"    - used to set the context (optional)
 # "user"      - these are your prompts (at least one user prompt is required)
