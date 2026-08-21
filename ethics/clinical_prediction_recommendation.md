@@ -12,31 +12,31 @@ Therefore, your recommendation should consider not merely whether the model work
 
 ## Reconsider Your Model ##
 
-You are free to keep the model and data-processing decisions from the previous assignment, but you are **not** required to do so. The new patient records may give you reasons to revisit and explore the consequences of how you handled missing data, categorical variables, feature selection, thresholds, or other aspects of your model.
+You are free to keep your original model and data-processing decisions from the previous assignment, but you are not required to do so. The new patient records may give you reasons to revisit and explore the consequences of how you handled missing data, categorical variables, feature selection, thresholds, or other aspects of your model.
 
 Changing a model after examining how it behaves on these 20 patients creates an important methodological problem. Once these cases influence your modeling decisions, they can no longer serve as independent evidence that the revised model will perform well on new patients. Repeatedly adjusting a model in response to a small set of cases also risks overfitting to those particular examples.
 
-Nevertheless, examining edge cases and testing how reasonable modeling choices affect them is an important part of model evaluation. The purpose of this assignment is therefore somewhat different from a standard model-development pipeline. You are using these patients to explore the consequences of choices you could reasonably have made—not to demonstrate that a revised model is more accurate. If this analysis led you to revise a model in practice, you would need new, independent evaluation data before making claims about the revised model's performance.
+Nevertheless, examining edge cases and testing how reasonable modeling choices affect them is an important part of model evaluation. The purpose of this assignment is therefore somewhat different from a standard model-development pipeline. You are using these patients to explore the consequences of choices you could reasonably have made—not to demonstrate that a revised model is more accurate. In practice, if this analysis were to lead you to revise the model, you would need new, independent evaluation data before making claims about the revised model's performance.
 
-If you make significant changes, explain what you changed, why you changed it, how you evaluated the revised approach, and whether the change affected overall model performance or the predictions for particular patients. You should pay particular attention to patients whose recommendations change under different reasonable modeling or preprocessing decisions. In contrast, if you retain your original model, explain why the new patient records did not give you sufficient reason to change it.
+For the purposes of this assignment, if you make significant changes, explain what you changed and why you changed it. How did you evaluate the revised model and any intermediate approaches? Did your changes affect the overall model performance? You should pay particular attention to patients whose recommendations change under different preprocessing decisions. In contrast, if you decide to retain your original model, explain why the new patient records did not give you sufficient reason to change.
 
 ## Your Recommendation ##
 
 Your paper should explain and defend both your technical decisions and your recommendation to the hospital.
 
-Provide enough technical detail that administrators and physicians can understand why you trust your final model. Explain the important decisions involved in preparing the data, the evidence supporting those decisions, and any important limitations or uncertainties you discovered. Your discussion should consider issues such as missing data, categorical variables, ancestry and regional information, financial or access-related variables, false positives and false negatives, and cases in which reasonable modeling decisions lead to different recommendations.
+Provide enough technical detail that administrators and physicians can understand why you trust your final model. Explain the important decisions involved in preparing the data, the evidence supporting those decisions, and any important limitations or uncertainties you discovered. Your discussion should consider issues such as missing data, categorical variables, ancestry and regional information, financial variables, false positives and false negatives, and cases in which reasonable modeling decisions lead to different recommendations. Keep in mind that nobody knows the true treatment outcome for the 20 new patients.
 
 Then recommend how much authority the model should have. For example, should it make treatment recommendations directly, identify patients for human review, serve only as an advisory tool, or be used in some other way? Your recommendation should acknowledge the tradeoffs involved rather than assuming that either humans or models are automatically more trustworthy. You should also make clear who ultimately makes the treatment decision, when human review is required, and what should happen when the model and physician disagree.
 
 ## Christian Faith and Professional Responsibility ##
 
-Your recommendation must also demonstrate a thoughtful understanding of how the Christian faith connects to the decisions in this project.
+Your recommendation must demonstrate a thoughtful understanding of how the Christian faith connects to the decisions in this project.
 
-You are not required to personally believe or affirm the Christian faith. You may agree with its teachings, question them, critique them, or argue that particular Christian principles should not influence the hospital's decision. Whatever position you take, your discussion should represent the Christian ideas accurately and seriously and connect them directly to the technical and human dilemmas involved in the model.
+You are not required to personally believe or affirm the Christian faith. You may agree with its teachings, question them, critique them, or argue that particular Christian principles should not influence the hospital's decision. Whatever position you take, your discussion should represent the Christian ideas accurately and seriously and connect them directly to the dilemmas involved in your model.
 
-Two especially relevant Christian teachings are **love of neighbor** and **vocation**. Love of neighbor raises questions about how technical decisions affect the particular people represented by the data, while vocation raises questions about the responsibilities of data scientists, physicians, and administrators whose professional decisions affect others. You are welcome to use other biblical texts or Christian doctrines instead.
+Two especially relevant Christian teachings are love for neighbor and vocation. Love of neighbor raises questions about how technical decisions affect the particular people represented by the data, while vocation raises questions about the responsibilities of data scientists, physicians, and administrators whose professional decisions affect others. You are welcome to use other biblical texts or Christian doctrines instead.
 
-As part of this discussion, use and cite at least two relevant biblical texts and engage at least one Christian teaching or doctrine in enough depth to demonstrate that you understand it. You should also distinguish between claims that come from Christian revelation (i.e., the Bible) and claims that come from statistical evidence, medical knowledge, human reason, or experience. Scripture will not tell you which imputation method or machine-learning algorithm is best, but Christian teaching may still have something important to say about how people should use that knowledge and treat the people affected by their decisions.
+As part of this discussion, **use and cite at least two relevant biblical texts** and engage **at least one Christian teaching or doctrine** in enough depth to demonstrate that you understand it. You should also distinguish between claims that come from Christian revelation (i.e., the Bible) and claims that come from statistical evidence, medical knowledge, human reason, or experience. Scripture will not tell you which machine-learning algorithm is best or the mathematical steps to handle missing vlaues, but Christian teaching should still have something important to say about how people should use that knowledge and treat the people affected by their decisions.
 
 ## Sources ##
 
@@ -46,10 +46,10 @@ You may use the course readings, including Max Tegmark's *Life 3.0*, Arvind Nara
 
 Before writing the paper, develop an outline that shows the major technical, ethical, and Christian claims you plan to make. Take this outline to the Writing Studio for review before completing your final draft.
 
-Submit:
+When finished, submit:
 
-1. your 3-5 page paper addressed to hospital administrators and physicians;
-2. your reviewed outline;
+1. your reviewed outline;
+2. your 3-5 page paper; and
 3. the final version of the code or notebook used to produce your analysis and predictions for the 20 current patients.
 
 Note: *The 3-5 page limit applies to the text of the paper itself; it does not include figures, tables, or other references.*
