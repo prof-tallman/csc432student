@@ -40,11 +40,11 @@ You may use the course readings, including Max Tegmark's *Life 3.0*, Arvind Nara
 
 ## Writing Process and Submission ##
 
-Before writing the paper, develop an outline that shows the major technical, ethical, and Christian claims you plan to make. **Take this outline to the Writing Studio for review before completing your final draft.**
+Before writing the paper, develop an outline that shows the major technical, ethical, and Christian claims you plan to make. Take this outline to the Writing Studio for review before completing your final draft.
 
 Submit:
 
-1. your **3-5 page paper** addressed to hospital administrators and physicians;
+1. your 3-5 page paper addressed to hospital administrators and physicians;
 2. your reviewed outline;
 3. the final version of the code or notebook used to produce your analysis and predictions for the 20 current patients.
 
@@ -54,7 +54,7 @@ The paper should demonstrate enough technical rigor that a knowledgeable reader 
 
 ## Final Thoughts ##
 
-> **Your goal is not to discover a perfectly accurate model or an easy ethical answer. Your goal is to demonstrate that you can use technical knowledge, careful reasoning, and an informed understanding of the Christian faith to make and defend a responsible professional judgment.**
+**Your goal is not to discover a perfectly accurate model or an easy ethical answer. Your goal is to demonstrate that you can use technical knowledge, careful reasoning, and an informed understanding of the Christian faith to make and defend a responsible professional judgment.**
 
 ## Attribution and Acknowledgements ##
 
