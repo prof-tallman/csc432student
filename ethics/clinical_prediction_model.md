@@ -61,7 +61,7 @@ Keep the summary concise. Ideally, you would fit it all on a single page. Its pu
 
 ## Attribution and Acknowledgements ##
 
-This model is the first half of a larger project. Prof. Tallman is unlikely to be the first professor to ever think of such a project. However,s mistakes. R the ideas were devised by him independently of any other authors with inspiration and help coming from other Concordia faculty.
+This model is the first half of a larger project. Prof. Tallman is unlikely to be the first professor to ever think of such a project. However, the ideas were devised by him independently of any other authors with inspiration and help coming from other Concordia faculty.
 
 *Generative AI was used to assist with brainstorming and drafting portions of the instructions. The assignment concept, learning objectives, dataset design requirements, and final revisions were developed by Prof. Tallman.*
 
