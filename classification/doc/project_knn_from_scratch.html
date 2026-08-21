@@ -1,0 +1,23 @@
+<p>Implement the K-Nearest Neighbors Classification algorithm from scratch in Python. You are encouraged to use Pandas and Numpy, but not any ML modules that do the work for you. Your code does not need to include all of the same features as Scikit-Learn, but the features that it provides should match the KNeighborsClassifier object. Here is what you must implement:</p>
+<ul>
+    <li>Constructor that takes <code>n_neighbors</code> and <code>metric</code>. If you are looking for a little bit of extra credit, you can figure out how to implement 'distance' weighting. You must include three possible metrics: 'euclidean' (default), 'manhattan', and 'cosine'. Pass the metrics as strings or as callable functions.</li>
+    <li><code>fit</code> function (double-check the documentation for the correct return value!)</li>
+    <li><code>kneighbors</code> function</li>
+    <li><code>predict</code> function</li>
+    <li><code>score</code> function</li>
+    <li><code>classes_</code> variable</li>
+    <li><code>n_features_in_</code> variable</li>
+    <li><code>feature_names_in_</code> variable (works when X is a DataFrame but not for Numpy Arrays).</li>
+    <li><code>n_samples_fit_</code> variable</li>
+</ul>
+<p>I suggest that you use Numpy as the basis for all of your data processing. Your input <code>X</code> and output <code>y</code> should be either Pandas DataFrames or Numpy Arrays. You are welcome to use Scikit-Learn to generate test data, but you may not wrap an existing machine learning algorithm in any way.</p>
+<p>Write your module so that other people can import and use your <code>KNN</code> object. In the main portion of your code, demonstrate that your code works by generating a few 2D blobs of data, with each blob being a different class. Randomly generate a new data point and use your KNN model to classify it. Then, display the results in a graph.</p>
+<p><strong>Groups:</strong></p>
+<p>You are welcome to work on this project individually or in small groups of 2-4 students. If you work in a group, please tell me who your partners were and provide a short explanation of how the work was divided evenly among you all.</p>
+<h5><strong>Resources (these links don't work but I'll try to find replacement articles):</strong></h5>
+<ul>
+    <li><a href="https://www.datavedas.com/knn-alternatives-to-majority-voting/" target="_blank" rel="noopener">Machine Learning Basics with the K-Nearest Neighbors Algorithm</a> by Onel Harrison</li>
+    <li><a href="https://www.datavedas.com/knn-alternatives-to-majority-voting/" target="_blank" rel="noopener">KNN - Alternatives to Majority Voting</a> by Archish Rai Kapil (you are allowed to use the standard majority vote method--full credit--but be aware that alternatives exist)</li>
+</ul>
+<p><strong>Note:</strong></p>
+<p>If you would prefer to implement Decision Trees, that is a suitable substitute. It will be a little harder.</p>
