@@ -12,7 +12,11 @@ Your recommendation should therefore consider not merely whether the model works
 
 ## Reconsider Your Model ##
 
-You are free to keep the model and data-processing decisions from the previous assignment, but you are **not** required to do so. The new patient records may give you reasons to reconsider how you handled missing data, categorical variables, feature selection, thresholds, or other aspects of your model.
+You are free to keep the model and data-processing decisions from the previous assignment, but you are **not** required to do so. The new patient records may give you reasons to revisit and explore the consequences of how you handled missing data, categorical variables, feature selection, thresholds, or other aspects of your model.
+
+Changing a model after examining how it behaves on these 20 patients creates an important methodological problem. Once these cases influence your modeling decisions, they can no longer serve as independent evidence that the revised model will perform well on new patients. Repeatedly adjusting a model in response to a small set of cases also risks overfitting to those particular examples.
+
+Nevertheless, examining edge cases and testing how reasonable modeling choices affect them is an important part of model evaluation. The purpose of this assignment is therefore somewhat different from a standard model-development pipeline. You are using these patients to explore the consequences of choices you could reasonably have made—not to demonstrate that a revised model is more accurate. If this analysis led you to revise a model in practice, you would need new, independent evaluation data before making claims about the revised model's performance.
 
 If you make significant changes, explain what you changed, why you changed it, how you evaluated the revised approach, and whether the change affected overall model performance or the predictions for particular patients. You should pay particular attention to patients whose recommendations change under different reasonable modeling or preprocessing decisions. In contrast, if you retain your original model, explain why the new patient records did not give you sufficient reason to change it.
 
