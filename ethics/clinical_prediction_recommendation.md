@@ -4,11 +4,11 @@
 
 The hospital is now considering how predictive models should be used in making treatment decisions. You have received records for 20 current patients who are candidates for treatment.
 
-Your task is to revisit the model you developed in the previous assignment, apply it to these patients, and write a 3-5 page paper addressed to hospital administrators and physicians recommending how the hospital should use predictive modeling in its treatment process.
+Your task is to revisit the model you developed in the previous assignment, apply it to these patients, and write a 3-5 page paper recommending how the hospital should use predictive modeling in its treatment process.
 
-According to the hospital's previous evaluations, its prototype models can evaluate patients much faster than physicians and have performed about as well as--or slightly better than--physicians overall. However, they have also made significant mistakes. Relying entirely on physicians would avoid some algorithmic errors but would limit how many patients can be thoroughly evaluated. Neither approach is without costs.
+According to the hospital's previous evaluations, its prototype models can evaluate patients much faster than physicians and have performed about as well as--or slightly better than--physicians overall. However, the models have also made significant mistakes. Relying entirely on physicians would avoid some algorithmic errors but would limit the number of patients who can be evaluated. Both approaches have significant merits and drawbacks.
 
-Your recommendation should therefore consider not merely whether the model works, but what responsible use of the model would look like when its decisions affect individual patients.
+Therefore, your recommendation should consider not merely whether the model works, but what responsible use of the model would look like when its decisions affect individual people.
 
 ## Reconsider Your Model ##
 
