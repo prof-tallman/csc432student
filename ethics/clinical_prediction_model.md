@@ -2,7 +2,7 @@
 
 ## Overview ##
 
-A hospital is evaluating a new treatment for a serious medical condition. The treatment is expensive and requires specialized staff, so not every patient can receive it. Physicians currently review patient records and estimate which patients are the likely to benefit.
+A hospital is evaluating a new treatment for a serious medical condition. The treatment is expensive and requires specialized staff, so not every patient can receive it. Physicians currently review patient records and estimate which patients are the most likely to benefit.
 
 The hospital has also been experimenting with predictive models. Early prototypes can evaluate patients much faster than physicians and have performed about as well as--or slightly better than--human judgment alone. However, the models have also made some significant mistakes by producing incorrect recommendations that the physicians would have easily spotted.
 
@@ -17,7 +17,7 @@ You have received a worldwide dataset containing records from a large number of 
 - disease severity and medical history;
 - ancestry group and geographic region;
 - financial or access-related information; and
-- and several other potentially pertinent variables.
+- several other potentially pertinent variables.
 
 Do not assume that there is one universally correct way to clean or engineer the data. The patient data is incomplete due to inconsistent data collection practices, equipment outages, incomplete testing (e.g., patient no-shows), and recording errors. How you decide to handle these inconsistencies is an important part of the assignment.
 
@@ -41,7 +41,7 @@ For missing data, possible approaches include removing incomplete records, subst
 
 Do not stop after producing a model with a good overall score. Test at least two reasonable approaches to handling missing data and compare their effects. You should also investigate whether important modeling or preprocessing decisions change the model's predictions for certain subsets of the patient population.
 
-The hospital is especially concerned about cases near the boundary between one recommendation and another. A preprocessing decision that barely affects overall accuracy could still have a major effect on an individual patient. Your model has the potential to saves lives or to deny somebody life saving treatment.
+The hospital is especially concerned about cases near the boundary between one recommendation and another. A preprocessing decision that barely affects overall accuracy could still have a major effect on an individual patient. Your model has the potential to save lives or to deny somebody life-saving treatment.
 
 You are not expected to discover a single objectively "correct" model. You are expected to make informed decisions, understand their consequences, and be able to justify your decisions. Your goal is to document what you did and what you discovered, not to provide a full analysis.
 
@@ -59,6 +59,20 @@ Submit your code or a notebook along with a brief technical summary that identif
 
 Keep the summary concise. Ideally, you would fit it all on a single page. Its purpose is to document what you did and what you discovered, not to provide a full analysis.
 
+## Grading — 50 Points ##
+
+Your grade is based primarily on the quality of your data-processing decisions, how carefully you evaluate their consequences, and how well you explain and justify those decisions. A model with slightly lower overall accuracy may earn a higher grade if it demonstrates better reasoning and more thoughtful evaluation.
+
+* **~25–30 points:** You have made substantial progress, but the model or analysis is incomplete, poorly evaluated, or does not yet support a clear explanation of your decisions.
+
+* **~30–40 points:** You produce a working predictive model and make reasonable preprocessing and modeling choices. You test at least two approaches to missing data and provide a basic evaluation of model performance.
+
+* **40–45 points:** Your model is well designed and carefully evaluated. You justify important choices involving features, missing data, categorical variables, model selection, and evaluation, and you examine how these choices affect different patients or subsets of the population.
+
+* **45–50 points:** Your work demonstrates particularly strong technical judgment. You compare reasonable alternatives, investigate important tradeoffs and borderline cases, evaluate consequences beyond a single overall accuracy score, and clearly explain why your final approach is defensible.
+
+The goal is not to discover one perfectly correct model. The strongest submissions will demonstrate that you understand how technical choices can change predictions and can make and defend those choices responsibly.
+
 ## Generative AI ##
 
 Generative AI may be used for ordinary programming assistance, debugging, explanations, and research related to this assignment. You may use AI to explain general Python code and neural-network ideas; to help diagnose errors; and, perhaps most importantly, to help you understand the statistical consequences of different preprocessing approaches.
@@ -72,8 +86,6 @@ However, the important modeling decisions must be your own. You may use AI to re
 - which model to use;
 - how to define decision thresholds; or
 - how to interpret the consequences of different approaches.
-
-The purpose of this assignment is not merely to produce a model with a high score. It is to practice making and evaluating defensible technical choices when those choices can affect particular people.
 
 You are responsible for understanding all code and analysis that you submit and for checking AI-generated suggestions for errors.
 
