@@ -59,6 +59,26 @@ Submit your code or a notebook along with a brief technical summary that identif
 
 Keep the summary concise. Ideally, you would fit it all on a single page. Its purpose is to document what you did and what you discovered, not to provide a full analysis.
 
+## Generative AI ##
+
+Generative AI may be used for ordinary programming assistance, debugging, explanations, and research related to this assignment. You may use AI to explain general Python code and neural-network ideas; to help diagnose errors; and, perhaps most importantly, to help you understand the statistical consequences of different preprocessing approaches.
+
+However, the important modeling decisions must be your own. You may use AI to research individual options, but you should evaluate those options yourself and be able to explain why you made each important decision. AI should not simply decide for you:
+
+- which features to include or exclude;
+- how to handle missing data;
+- how to encode categorical variables;
+- how to treat demographic, ancestry, regional, or financial information;
+- which model to use;
+- how to define decision thresholds; or
+- how to interpret the consequences of different approaches.
+
+The purpose of this assignment is not merely to produce a model with a high score. It is to practice making and evaluating defensible technical choices when those choices can affect particular people.
+
+You are responsible for understanding all code and analysis that you submit and for checking AI-generated suggestions for errors.
+
+Please add the appropriate references and attribution for any use of AI. And don't forget to credit any other authors whose work helps you with this assignment.
+
 ## Attribution and Acknowledgements ##
 
 This model is the first half of a larger project. Prof. Tallman is unlikely to be the first professor to ever think of such a project. However, the ideas were devised by him independently of any other authors with inspiration and help coming from other Concordia faculty.

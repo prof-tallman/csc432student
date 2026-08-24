@@ -56,6 +56,31 @@ Note: *The 3-5 page limit applies to the text of the paper itself; it does not i
 
 The paper should demonstrate enough technical rigor that a knowledgeable reader can evaluate your modeling decisions, but it should not become a line-by-line description of your code. Focus on the decisions that matter, the evidence supporting them, their consequences for particular patients, and the reasoning behind your final recommendation.
 
+## Generative AI ##
+
+Generative AI use is limited for this journal entry. You may use AI as a research or feedback tool, but the reasoning in the paper should be your own. You should personally wrestle with the tradeoffs, decide what you believe responsible professional practice requires, and explain how the technical evidence, ethical concerns, and Christian teachings fit together.
+
+You may use AI to:
+
+- help explain technical concepts that you do not understand;
+- help you locate or understand relevant background information;
+- diagnose problems in the error messages in the code used to analyze the 20 patients; and
+- provide counterarguments to ideas, theses, evidence, and arguments that you consider and then address on your own.
+
+However, AI may not generate the substance of your journal entry for you. In particular, AI should not:
+
+- decide what recommendation you should make to the hospital;
+- determine how much authority the predictive model should have;
+- decide which patients deserve human review;
+- generate your ethical analysis;
+- generate your Christian reflection;
+- interpret biblical texts on your behalf; or
+- write the final journal entry.
+
+You are responsible for all claims, citations, analysis, and recommendations in your final submission. If you use AI to help research a Christian doctrine or biblical passage, verify its claims against credible theological or biblical sources rather than treating AI itself as an authority.
+
+Please add references and attribution where appropriate.
+
 ## Final Thoughts ##
 
 **Your goal is not to discover a perfectly accurate model or an easy ethical answer. Your goal is to demonstrate that you can use technical knowledge, careful reasoning, and an informed understanding of the Christian faith to make and defend a responsible professional judgment.**
