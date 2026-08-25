@@ -150,7 +150,7 @@ If the actual file size is dramatically different, investigate why.
 
 ## Generative AI ##
 
-Generative AI use is very limited for this project. You may use AI to:
+Generative AI use is limited for this project. You may use AI to:
 
 - explain Python syntax or an unfamiliar library function;
 - explain a specific error message;
