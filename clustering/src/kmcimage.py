@@ -144,8 +144,8 @@ if __name__ == '__main__':
             raw_image = convert_from_kmc16(colors, pixels)
             palette_shape = (4, 4)
             color_count = len(colors)
-            src_filename = args.filename
-            dst_filename = src_filename[:-4]
+            dst_filename = args.filename
+            src_filename = dst_filename[:-4]
 
             # Demo Purposes: only one image to display, the KMC image
             plt.figure()
@@ -169,10 +169,12 @@ if __name__ == '__main__':
                 ax[i][j].imshow(color_blocks[color_index])
 
         # Output the compression results
-        original_size = os.path.getsize(src_filename)
-        compressed_size = os.path.getsize(dst_filename)
-        print(f"  Original Size: {original_size:>11,} bytes")
-        print(f"Compressed Size: {compressed_size:>11,} bytes")
+        if (os.path.exists(src_filename) and os.path.isfile(src_filename)
+            and os.path.exists(dst_filename) and os.path.isfile(dst_filename)):
+            original_size = os.path.getsize(src_filename)
+            compressed_size = os.path.getsize(dst_filename)
+            print(f"  Original Size: {original_size:>11,} bytes")
+            print(f"Compressed Size: {compressed_size:>11,} bytes")
 
         plt.show()
 
