@@ -77,7 +77,7 @@ The goal is not to discover one perfectly correct model. The strongest submissio
 
 Generative AI may be used for ordinary programming assistance, debugging, explanations, and research related to this assignment. You may use AI to explain general Python code and neural-network ideas; to help diagnose errors; and, perhaps most importantly, to help you understand the statistical consequences of different preprocessing approaches.
 
-However, the important modeling decisions must be your own. You may use AI to research individual options, but you should evaluate those options yourself and be able to explain why you made each important decision. AI should not simply decide for you:
+However, the important modeling decisions must be your own. You may use AI to research individual options, but you should evaluate those options yourself and be able to explain why you made each important decision. AI should ***not*** decide:
 
 - which features to include or exclude;
 - how to handle missing data;
