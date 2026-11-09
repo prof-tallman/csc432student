@@ -10,15 +10,15 @@
 # https://gymnasium.farama.org/environments/toy_text/frozen_lake/
 
 import gymnasium as gym
+from gymnasium.spaces import Discrete
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import pickle
+import argparse
 
-# global random number generator with seed that guarantees victory
+# Random seed used to make training reproducible
 rngseed = 432
-RNG = np.random.default_rng(seed=rngseed)
-
 
 def _run_simulation(n_episodes:int, 
                     is_slippery:bool, 
@@ -33,27 +33,24 @@ def _run_simulation(n_episodes:int,
     Parameters:
      * n_episodes:  Number of iterations to train the model. Higher numbers
                     provide more learning but they take longer.
-     * is_slippery: Adds a random element to the game. The agent has an 80% of
-                    moving in the intended direction but there's still a 20%
-                    chance that it 'slips' and goes a different way.
+     * is_slippery: Adds a random element to the game. The agent has an 33% of
+                    moving in the intended direction but there's a 66% chance
+                    that it 'slips' and goes a perpindicular direction.
      * training_mode: Determines whether the model should train by creating
                     and saving a new Q-Table or make use of an existing model.
-     * render_mode: Selects whether to show and animate the episodse or run
-                    them all in the background. If `training_mode` is True,
-                    this parameter is usually False (it's **much** faster).
-                    But if `training_mode` is False, the user should decide
-                    whether they want to visually see the results or just use
-                    the text calculations.
      * file_name:   Saves the trained model under this file name (relative to
                     the working directory).
 
     Returns: The Q-Table as a numpy array
     '''
 
-    # Converts render_mode True/False to terms that gymnasium understands
+    RNG = np.random.default_rng(seed=rngseed)
+
+    # Converts render_mode using terms that gymnasium understands
     render_mode = None if training_mode else 'human'
-    env = gym.make('FrozenLake-v1', 
-                   map_name="8x8", 
+
+    # Create the gym environment
+    env = gym.make('FrozenLake8x8-v1', 
                    is_slippery=is_slippery, 
                    render_mode=render_mode)
     env.action_space.seed(rngseed)
@@ -61,6 +58,8 @@ def _run_simulation(n_episodes:int,
     # Training mode starts with an empty Q-Table whereas rollout mode uses
     # a pretrained model that was saved to disk
     if training_mode:
+        assert isinstance(env.observation_space, Discrete)
+        assert isinstance(env.action_space, Discrete)
         q_table = np.zeros((env.observation_space.n, env.action_space.n))
     else:
         with open(file_name, 'rb') as fin:
@@ -70,24 +69,25 @@ def _run_simulation(n_episodes:int,
     # epsilon-greedy policy that starts with 100% exploration and slowly moves
     # to 100% exploitation (i.e., experience) but only if there are enough
     # episodes to reach epsilon==0 at the given decay rate.
-    alpha = 0.9 # learning rate (very high)
-    gamma = 0.9 # discount rate (mid-range)
-    epsilon = 1 # start at 100% exploration
-    epsilon_decay_rate = 0.0001
+    alpha = 0.1        # learning rate
+    gamma = 0.99       # discount rate
+    epsilon = 1        # start at 100% exploration
+    epsilon_min = 0.05 # never completely stop learning
+    epsilon_decay_rate = 0.00001
 
     # Rewards are overly simplistic for this 8x8 environment. If elf reaches
-    # the final square in the bottom-left corner (square #63), then the agent
+    # the final square in the bottom-right corner (square #63), then the agent
     # receives a reward of 1. Every other state/action receives a score of 0.
     rewards_history = np.zeros(n_episodes)
 
     # Iterate through each episode, one a time.
     for i in range(n_episodes):
-        state, info = env.reset(seed=rngseed)
+        state, info = env.reset(seed=rngseed if training_mode and i == 0 else None)
         terminated = False
         truncated = False
 
-      # Run a single episode until it ends.
-      while not terminated and not truncated:
+        # Run a single episode until it ends.
+        while not terminated and not truncated:
 
             # In training mode, we use epislon greedy to choose between a 
             # random action and a learned action.
@@ -107,18 +107,25 @@ def _run_simulation(n_episodes:int,
             # complete. If we're in training mode, we update the Q-Table.
             next_state, reward, terminated, truncated, info = env.step(action)
             if training_mode:
-                tempdif = gamma * np.max(q_table[next_state,:])
-                learned = alpha * (reward + tempdif - q_table[state,action])
-                q_table[state,action] = q_table[state,action] + learned
+                future_value = 0
+                if not terminated:
+                    future_value = gamma * np.max(q_table[next_state,:])
+                learned = alpha * (float(reward) + future_value - q_table[state,action])
+                q_table[state, action] += learned
             state = next_state
+
+        # Report the outcome of each rollout episode
+        if not training_mode:
+            if reward == 1:
+                print(f"Episode {i+1}: SUCCESS (reached the goal)")
+            elif truncated:
+                print(f"Episode {i+1}: TRUNCATED (step limit reached)")
+            else:
+                print(f"Episode {i+1}: FAILURE (fell into a hole)")
 
         # Update the epsilon-greedy algorithm so that we gradually change from
         # exploration to exploitation (learning).
-        epsilon = max(epsilon - epsilon_decay_rate, 0)
-        
-        # After finishing training, lower the learning rate for stability
-        if epsilon==0:
-            alpha = 0.0001
+        epsilon = max(epsilon - epsilon_decay_rate, epsilon_min)
 
         # Save the last reward value and only the last reward value. It will
         # have a value of 1 if we ended on square #63. Or, it will have a
@@ -127,24 +134,32 @@ def _run_simulation(n_episodes:int,
         rewards_history[i] = reward
 
         # Helpful debug output
-        if training_mode and i % 1000 == 0:
-            if i == 0:
-                print(f'Finished trianing episode {i+1:>5}...')
-            else:
-                print(f'Finished trianing episode {i:>5}...')
+        if training_mode and (i + 1) % 10000 == 0:
+            print(f'Finished training episode {i+1:>6}...')
 
     # Release all resources for this environment
     env.close()
+
+    if not training_mode:
+        wins = int(np.sum(rewards_history))
+        success_rate = wins / n_episodes
+        print(f"Rollout: {wins}/{n_episodes} wins ({success_rate:.1%})")
 
     # Plot the reward results for the last 100 episodes. Since the reward is
     # either 0 or 1 for any given episode, the sum of the last 100 episodes
     # will roughly correspond to the win rate for the agent.
     if training_mode:
-        last100_rewards = np.zeros(n_episodes)
-        for i in range(n_episodes):
-            last100_rewards[i] = np.sum(rewards_history[max(0, i-100):(i+1)])
+        last100_rewards = (
+            pd.Series(rewards_history).
+            rolling(window=100, min_periods=1).
+            mean()
+        )
+        plt.figure()
         plt.plot(last100_rewards)
+        plt.ylabel("Success Rate (last 100 episodes)")
+        plt.xlabel("Episode")
         plt.savefig(f'{file_name}.png')
+        plt.close()
 
     # Save the Q-Table to 
     if training_mode:
@@ -170,33 +185,34 @@ def train(n_episodes:int = 10000,
     Parameters:
      * n_episodes:  Number of iterations to train the model. Higher numbers
                     provide more learning but they take longer.
-     * is_slippery: Adds a random element to the game. The agent has an 80% of
-                    moving in the intended direction but there's still a 20%
-                    chance that it 'slips' and goes a different way.
+     * is_slippery: Adds a random element to the game. The agent has an 33% of
+                    moving in the intended direction but there's a 66% chance
+                    that it 'slips' and goes a perpindicular direction.
      * file_name:   Saves the trained model under this file name (relative to
                     the working directory).
 
     Returns: The Q-Table as a numpy array
     '''
-    return _run_simulation(n_episodes, is_slippery, True, False, file_name)
+    return _run_simulation(n_episodes, is_slippery, True, file_name)
 
 
-def rollout(is_slippery:bool = True, 
+def rollout(n_episodes:int = 5,
+            is_slippery:bool = True, 
             file_name:str = "frozen_lake8x8.pkl"):
     '''
     Visualizes one episode in the environment with a fully trained Q-Learning
     model.
 
     Parameters
-     * is_slippery: Adds a random element to the game. The agent has an 80% of
-                    moving in the intended direction but there's still a 20%
-                    chance that it 'slips' and goes a different way.
+     * is_slippery: Adds a random element to the game. The agent has an 33% of
+                    moving in the intended direction but there's a 66% chance
+                    that it 'slips' and goes a perpindicular direction.
      * file_name:   Loads the trained model from a Pickle file with this file
                     name (relative to the working directory).
 
     Returns: The Q-Table as a numpy array
     '''
-    return _run_simulation(1, is_slippery, False, True, file_name)
+    return _run_simulation(n_episodes, is_slippery, False, file_name)
 
 
 def visualize_policy(q_table:np.ndarray, map_shape:tuple=(8, 8)):
@@ -225,7 +241,31 @@ def visualize_policy(q_table:np.ndarray, map_shape:tuple=(8, 8)):
 
 
 if __name__ == '__main__':
-    q_table = train(15000, is_slippery=False)
-    visualize_policy(q_table)
-    input("Press <ENTER> to rollout the model")
-    rollout(is_slippery=False)
+    parser = argparse.ArgumentParser(
+        description='Train or run a Q-learning agent on Frozen Lake (8x8).'
+    )
+    parser.add_argument('--train', action='store_true',
+                        help='Train and save a new agent (default: run saved agent).')
+    parser.add_argument('--slippery', action=argparse.BooleanOptionalAction,
+                        default=False,
+                        help='Enable or disable slipping (default: slippery).')
+    parser.add_argument('--file', default='frozen_lake8x8.pkl',
+                        help='Q-table filename to save/load.')
+    parser.add_argument('--episodes', type=int, default=None,
+                        help='Number of episodes (default: 100000 training, 5 rollout).')
+    args = parser.parse_args()
+
+    if args.episodes is not None and args.episodes <= 0:
+        parser.error('--episodes must be a positive integer')
+
+    if args.train:
+        episodes = args.episodes if args.episodes is not None else 100000
+        q_table = train(episodes, args.slippery, args.file)
+        visualize_policy(q_table)
+    else:
+        with open(args.file, 'rb') as fin:
+            q_table = pickle.load(fin)
+        visualize_policy(q_table)
+        print()
+        episodes = args.episodes if args.episodes is not None else 5
+        rollout(episodes, args.slippery, args.file)
