@@ -73,7 +73,7 @@ def _run_simulation(n_episodes:int,
 
     # Converts render_mode True/False to terms that gymnasium understands
     render_mode = None if training_mode else 'human'
-    env = gym.make('Taxi-v3', render_mode=render_mode)
+    env = gym.make('Taxi-v4', render_mode=render_mode)
 
     # Training mode starts with an empty Q-Table whereas rollout mode uses
     # a pretrained model that was saved to disk
