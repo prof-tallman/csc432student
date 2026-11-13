@@ -9,6 +9,20 @@
 # Official documentation:
 # https://gymnasium.farama.org/environments/toy_text/frozen_lake/
 
+# Action Space (4 possibilities)
+#  0: west  (move left)
+#  1: south (move down)
+#  2: east  (move right)
+#  3: north (move up)
+
+# Observation Space (64 total states)
+#  State is a number 0 (top left) through 63 (bottom right)
+#  state = row * 8 + column
+
+# Rewards
+#  +1  for reaching the goal (state 63)
+#  0   otherwise
+
 import gymnasium as gym
 from gymnasium.spaces import Discrete
 import numpy as np
@@ -50,9 +64,7 @@ def _run_simulation(n_episodes:int,
     render_mode = None if training_mode else 'human'
 
     # Create the gym environment
-    env = gym.make('FrozenLake8x8-v1', 
-                   is_slippery=is_slippery, 
-                   render_mode=render_mode)
+    env = gym.make('FrozenLake8x8-v1', is_slippery=is_slippery, render_mode=render_mode)
     env.action_space.seed(rngseed)
 
     # Training mode starts with an empty Q-Table whereas rollout mode uses
@@ -69,11 +81,11 @@ def _run_simulation(n_episodes:int,
     # epsilon-greedy policy that starts with 100% exploration and slowly moves
     # to 100% exploitation (i.e., experience) but only if there are enough
     # episodes to reach epsilon==0 at the given decay rate.
-    alpha = 0.1        # learning rate
-    gamma = 0.99       # discount rate
+    alpha = 0.1        # learning rate (low - learn slowly)
+    gamma = 0.99       # discount rate (high - prioritize future reward)
     epsilon = 1        # start at 100% exploration
     epsilon_min = 0.05 # never completely stop learning
-    epsilon_decay_rate = 0.00001
+    epsilon_decay_rate = 0.00001   # slower decay rate
 
     # Rewards are overly simplistic for this 8x8 environment. If elf reaches
     # the final square in the bottom-right corner (square #63), then the agent
