@@ -94,13 +94,9 @@ def _run_simulation(n_episodes:int,
 
             # During training, epsilon-greedy chooses between exploration
             # (random action) and exploitation (best learned action).
-            if training_mode:
-                if RNG.random() < epsilon:
-                    action = env.action_space.sample()
-                else:
-                    action = np.argmax(q_table[state,:])
-
             # During rollout, always choose the best learned action.
+            if training_mode and RNG.random() < epsilon:
+                action = env.action_space.sample()
             else:
                 action = np.argmax(q_table[state,:])
 
@@ -256,11 +252,13 @@ if __name__ == '__main__':
     if args.train:
         episodes = args.episodes if args.episodes is not None else 30000
         q_table = train(episodes, args.file)
-        visualize_policy(q_table)
+        visualize_policy(q_table, 0, 1) # picking up passenger
+        visualize_policy(q_table, 4, 1) # delivering passenger
     else:
         with open(args.file, 'rb') as fin:
             q_table = pickle.load(fin)
-        visualize_policy(q_table)
+        visualize_policy(q_table, 0, 1) # picking up passenger
+        visualize_policy(q_table, 4, 1) # delivering passenger
         print()
         episodes = args.episodes if args.episodes is not None else 5
         rollout(episodes, args.file)
