@@ -103,10 +103,9 @@ def train_dqn(n_episodes=2500, gamma=0.99,
                 next_input = one_hot(next_state)
                 next_q = model(next_input, training=False).numpy().ravel()
                 target_q = reward + gamma * np.max(next_q)
+            q_values[action] = target_q
 
             # Train the neural network using the updated Q-values
-            # Leaves the target values for the other actions unchanged
-            q_values[action] = target_q
             model.train_on_batch(state_input, q_values.reshape(1, -1))
 
             # Update the state and accumulate the episode reward
